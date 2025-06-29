@@ -125,12 +125,12 @@ const Charts = ({ data, loading }: ChartsProps) => {
   if (loading) {
     return (
       <div className="space-y-6">
-        <Card className="bg-slate-900/50 border-slate-800 animate-pulse">
+        <Card className="bg-white dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 animate-pulse">
           <CardHeader>
-            <div className="h-6 bg-slate-700 rounded w-1/3"></div>
+            <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded w-1/3"></div>
           </CardHeader>
           <CardContent>
-            <div className="h-80 bg-slate-700 rounded"></div>
+            <div className="h-80 bg-gray-200 dark:bg-slate-700 rounded"></div>
           </CardContent>
         </Card>
       </div>
@@ -145,8 +145,8 @@ const Charts = ({ data, loading }: ChartsProps) => {
   return (
     <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h3 className="text-xl font-semibold text-white">📈 Interactive Analytics</h3>
-        <Badge variant="outline" className="border-purple-500 text-purple-400">
+        <h3 className="text-xl font-semibold text-gray-800 dark:text-white">📈 Interactive Analytics</h3>
+        <Badge variant="outline" className="border-purple-500 text-purple-600 dark:text-purple-400">
           Dynamic Charts
         </Badge>
       </div>
@@ -162,8 +162,8 @@ const Charts = ({ data, loading }: ChartsProps) => {
               onClick={() => setActiveChart(chart.id as any)}
               className={`${
                 activeChart === chart.id 
-                  ? 'bg-yellow-500 text-black hover:bg-yellow-600' 
-                  : 'border-slate-700 text-slate-300 hover:border-yellow-400 hover:text-yellow-400'
+                  ? 'bg-blue-500 text-white hover:bg-blue-600 dark:bg-yellow-500 dark:text-black dark:hover:bg-yellow-600' 
+                  : 'border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-yellow-400 dark:hover:text-yellow-400'
               }`}
             >
               <IconComponent className="w-4 h-4 mr-2" />
@@ -183,9 +183,9 @@ const Charts = ({ data, loading }: ChartsProps) => {
           transition={{ duration: 0.5 }}
           className="lg:col-span-2"
         >
-          <Card className="bg-slate-900/50 border-slate-800 backdrop-blur-sm">
+          <Card className="bg-white dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 backdrop-blur-sm">
             <CardHeader>
-              <CardTitle className="text-white">
+              <CardTitle className="text-gray-800 dark:text-white">
                 {activeChart === 'revenue' && '💰 Revenue by Product'}
                 {activeChart === 'category' && '🏷️ Category Distribution'}
                 {activeChart === 'trend' && '📊 Revenue Trend Over Time'}
@@ -197,26 +197,28 @@ const Charts = ({ data, loading }: ChartsProps) => {
                 <ResponsiveContainer width="100%" height="100%">
                   {activeChart === 'revenue' && (
                     <BarChart data={revenueData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" className="dark:stroke-slate-600" />
                       <XAxis 
                         dataKey="name" 
-                        stroke="#9CA3AF" 
+                        stroke="#6B7280" 
+                        className="dark:stroke-slate-400"
                         fontSize={12}
                         angle={-45}
                         textAnchor="end"
                         height={80}
                       />
                       <YAxis 
-                        stroke="#9CA3AF" 
+                        stroke="#6B7280" 
+                        className="dark:stroke-slate-400"
                         fontSize={12}
                         tickFormatter={formatCurrency}
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1F2937', 
-                          border: '1px solid #374151',
+                          backgroundColor: '#FFFFFF', 
+                          border: '1px solid #E5E7EB',
                           borderRadius: '8px',
-                          color: '#F9FAFB'
+                          color: '#1F2937'
                         }}
                         formatter={(value: any) => [formatCurrency(value), 'Revenue']}
                       />
@@ -242,10 +244,10 @@ const Charts = ({ data, loading }: ChartsProps) => {
                       </Pie>
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1F2937', 
-                          border: '1px solid #374151',
+                          backgroundColor: '#FFFFFF', 
+                          border: '1px solid #E5E7EB',
                           borderRadius: '8px',
-                          color: '#F9FAFB'
+                          color: '#1F2937'
                         }}
                         formatter={(value: any) => [formatCurrency(value), 'Revenue']}
                       />
@@ -254,15 +256,15 @@ const Charts = ({ data, loading }: ChartsProps) => {
 
                   {activeChart === 'trend' && (
                     <AreaChart data={timeSeriesData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                      <XAxis dataKey="month" stroke="#9CA3AF" fontSize={12} />
-                      <YAxis stroke="#9CA3AF" fontSize={12} tickFormatter={formatCurrency} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" className="dark:stroke-slate-600" />
+                      <XAxis dataKey="month" stroke="#6B7280" className="dark:stroke-slate-400" fontSize={12} />
+                      <YAxis stroke="#6B7280" className="dark:stroke-slate-400" fontSize={12} tickFormatter={formatCurrency} />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1F2937', 
-                          border: '1px solid #374151',
+                          backgroundColor: '#FFFFFF', 
+                          border: '1px solid #E5E7EB',
                           borderRadius: '8px',
-                          color: '#F9FAFB'
+                          color: '#1F2937'
                         }}
                         formatter={(value: any) => [formatCurrency(value), 'Revenue']}
                       />
@@ -278,22 +280,23 @@ const Charts = ({ data, loading }: ChartsProps) => {
 
                   {activeChart === 'comparison' && (
                     <BarChart data={staffData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#E5E7EB" className="dark:stroke-slate-600" />
                       <XAxis 
                         dataKey="name" 
-                        stroke="#9CA3AF" 
+                        stroke="#6B7280" 
+                        className="dark:stroke-slate-400"
                         fontSize={12}
                         angle={-45}
                         textAnchor="end"
                         height={80}
                       />
-                      <YAxis stroke="#9CA3AF" fontSize={12} tickFormatter={formatCurrency} />
+                      <YAxis stroke="#6B7280" className="dark:stroke-slate-400" fontSize={12} tickFormatter={formatCurrency} />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#1F2937', 
-                          border: '1px solid #374151',
+                          backgroundColor: '#FFFFFF', 
+                          border: '1px solid #E5E7EB',
                           borderRadius: '8px',
-                          color: '#F9FAFB'
+                          color: '#1F2937'
                         }}
                         formatter={(value: any) => [formatCurrency(value), 'Revenue']}
                       />
@@ -314,15 +317,15 @@ const Charts = ({ data, loading }: ChartsProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          <Card className="bg-gradient-to-r from-green-500/10 to-green-600/10 border-green-500/30 backdrop-blur-sm">
+          <Card className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-500/10 dark:to-green-600/10 border-green-200 dark:border-green-500/30 backdrop-blur-sm">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-green-500/20 rounded-lg">
-                  <TrendingUp className="w-6 h-6 text-green-400" />
+                <div className="p-2 bg-green-100 dark:bg-green-500/20 rounded-lg">
+                  <TrendingUp className="w-6 h-6 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-green-400 font-medium">Total Revenue</p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-sm text-green-600 dark:text-green-400 font-medium">Total Revenue</p>
+                  <p className="text-2xl font-bold text-gray-800 dark:text-white">
                     {formatCurrency(data?.reduce((sum, item) => sum + (item['Payment Value'] || 0), 0) || 0)}
                   </p>
                 </div>
@@ -336,15 +339,15 @@ const Charts = ({ data, loading }: ChartsProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
-          <Card className="bg-gradient-to-r from-blue-500/10 to-blue-600/10 border-blue-500/30 backdrop-blur-sm">
+          <Card className="bg-gradient-to-r from-blue-50 to-blue-100 dark:from-blue-500/10 dark:to-blue-600/10 border-blue-200 dark:border-blue-500/30 backdrop-blur-sm">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-500/20 rounded-lg">
-                  <BarChart3 className="w-6 h-6 text-blue-400" />
+                <div className="p-2 bg-blue-100 dark:bg-blue-500/20 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-blue-400 font-medium">Total Transactions</p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">Total Transactions</p>
+                  <p className="text-2xl font-bold text-gray-800 dark:text-white">
                     {data?.length || 0}
                   </p>
                 </div>
@@ -358,15 +361,15 @@ const Charts = ({ data, loading }: ChartsProps) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <Card className="bg-gradient-to-r from-purple-500/10 to-purple-600/10 border-purple-500/30 backdrop-blur-sm">
+          <Card className="bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-500/10 dark:to-purple-600/10 border-purple-200 dark:border-purple-500/30 backdrop-blur-sm">
             <CardContent className="p-6">
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-purple-500/20 rounded-lg">
-                  <PieChartIcon className="w-6 h-6 text-purple-400" />
+                <div className="p-2 bg-purple-100 dark:bg-purple-500/20 rounded-lg">
+                  <PieChartIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-purple-400 font-medium">Avg Transaction</p>
-                  <p className="text-2xl font-bold text-white">
+                  <p className="text-sm text-purple-600 dark:text-purple-400 font-medium">Avg Transaction</p>
+                  <p className="text-2xl font-bold text-gray-800 dark:text-white">
                     {formatCurrency((data?.reduce((sum, item) => sum + (item['Payment Value'] || 0), 0) || 0) / (data?.length || 1))}
                   </p>
                 </div>

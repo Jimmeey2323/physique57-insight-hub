@@ -19,29 +19,29 @@ const Dashboard = () => {
 
   const ActiveComponent = tabs.find(tab => tab.id === activeTab)?.component || (() => (
     <div className="flex items-center justify-center h-96">
-      <p className="text-muted-foreground">Coming Soon</p>
+      <p className="text-gray-500 dark:text-slate-400">Coming Soon</p>
     </div>
   ));
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
       {/* Header */}
-      <div className="border-b border-slate-800 bg-slate-950/50 backdrop-blur-xl">
+      <div className="border-b border-gray-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/50 backdrop-blur-xl">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg flex items-center justify-center">
-                <span className="text-black font-bold text-lg">P57</span>
+              <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-lg">P57</span>
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-white">Physique 57 India</h1>
-                <p className="text-slate-400 text-sm">Data Analytics Dashboard</p>
+                <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Physique 57 India</h1>
+                <p className="text-gray-600 dark:text-slate-400 text-sm">Advanced Analytics Dashboard</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <span className="text-slate-400 text-sm">Live Data</span>
+                <span className="text-gray-600 dark:text-slate-400 text-sm">Live Data</span>
               </div>
             </div>
           </div>
@@ -49,7 +49,7 @@ const Dashboard = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="border-b border-slate-800 bg-slate-950/30 backdrop-blur-sm">
+      <div className="border-b border-gray-200 dark:border-slate-800 bg-white/50 dark:bg-slate-950/30 backdrop-blur-sm">
         <div className="container mx-auto px-6">
           <div className="flex overflow-x-auto">
             {tabs.map((tab) => {
@@ -58,18 +58,18 @@ const Dashboard = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex items-center space-x-2 px-6 py-4 text-sm font-medium transition-all duration-300 whitespace-nowrap ${
+                  className={`relative flex items-center space-x-3 px-8 py-6 text-sm font-medium transition-all duration-300 whitespace-nowrap group ${
                     activeTab === tab.id
-                      ? 'text-yellow-400 border-b-2 border-yellow-400'
-                      : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                      ? 'text-blue-600 dark:text-yellow-400 border-b-2 border-blue-600 dark:border-yellow-400'
+                      : 'text-gray-600 dark:text-slate-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-800/50'
                   }`}
                 >
-                  <IconComponent className="w-4 h-4" />
-                  <span>{tab.label}</span>
+                  <IconComponent className="w-5 h-5" />
+                  <span className="font-medium">{tab.label}</span>
                   {activeTab === tab.id && (
                     <motion.div
                       layoutId="activeTab"
-                      className="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-yellow-600/10 rounded-t-lg"
+                      className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-yellow-400/10 dark:to-yellow-600/10 rounded-t-lg"
                       initial={false}
                       transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                     />

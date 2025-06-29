@@ -10,6 +10,8 @@ import KPICards from './sales/KPICards';
 import TopBottomPerformers from './sales/TopBottomPerformers';
 import DataTables from './sales/DataTables';
 import Charts from './sales/Charts';
+import MonthOverMonthTable from './sales/MonthOverMonthTable';
+import YearOverYearTable from './sales/YearOverYearTable';
 import { useSalesData } from '@/hooks/useSalesData';
 
 const SalesAnalytics = () => {
@@ -44,13 +46,22 @@ const SalesAnalytics = () => {
       >
         <div className="flex items-center space-x-4">
           <motion.h2 
-            className="text-3xl font-bold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent"
-            animate={{ backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'] }}
-            transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+            className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent relative"
+            animate={{ 
+              backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+              textShadow: ['0 0 20px rgba(59, 130, 246, 0.3)', '0 0 30px rgba(147, 51, 234, 0.4)', '0 0 20px rgba(59, 130, 246, 0.3)']
+            }}
+            transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
           >
             📊 SALES ANALYTICS
+            <motion.div
+              className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full"
+              initial={{ width: 0 }}
+              animate={{ width: '100%' }}
+              transition={{ duration: 1.5, delay: 0.5 }}
+            />
           </motion.h2>
-          <Badge variant="outline" className="border-green-500 text-green-400">
+          <Badge variant="outline" className="border-green-500 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10">
             Live Data
           </Badge>
         </div>
@@ -60,7 +71,7 @@ const SalesAnalytics = () => {
             size="sm"
             onClick={() => refreshData()}
             disabled={loading}
-            className="border-slate-700 hover:border-yellow-400"
+            className="border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 dark:border-slate-700 dark:hover:border-yellow-400 dark:text-slate-300 dark:hover:text-yellow-400"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
             Refresh
@@ -69,7 +80,7 @@ const SalesAnalytics = () => {
             variant="outline"
             size="sm"
             onClick={() => setIsCustomizing(!isCustomizing)}
-            className="border-slate-700 hover:border-yellow-400"
+            className="border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 dark:border-slate-700 dark:hover:border-yellow-400 dark:text-slate-300 dark:hover:text-yellow-400"
           >
             <Settings className="w-4 h-4 mr-2" />
             Customize
@@ -77,7 +88,7 @@ const SalesAnalytics = () => {
           <Button
             variant="outline"
             size="sm"
-            className="border-slate-700 hover:border-yellow-400"
+            className="border-gray-300 text-gray-600 hover:border-blue-400 hover:text-blue-600 dark:border-slate-700 dark:hover:border-yellow-400 dark:text-slate-300 dark:hover:text-yellow-400"
           >
             <Download className="w-4 h-4 mr-2" />
             Export
@@ -86,30 +97,30 @@ const SalesAnalytics = () => {
       </motion.div>
 
       {/* Location Tabs */}
-      <Card className="bg-slate-900/50 border-slate-800 backdrop-blur-sm">
+      <Card className="bg-white dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 backdrop-blur-sm shadow-lg">
         <div className="flex w-full">
           {locations.map((location, index) => (
             <motion.button
               key={location.id}
               onClick={() => setActiveLocation(location.id)}
-              className={`flex-1 relative px-6 py-4 text-sm font-medium transition-all duration-300 ${
+              className={`flex-1 relative px-8 py-6 text-base font-semibold transition-all duration-300 ${
                 activeLocation === location.id
                   ? 'text-white'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                  : 'text-gray-600 dark:text-slate-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-slate-800/50'
               } ${index === 0 ? 'rounded-tl-lg' : ''} ${index === locations.length - 1 ? 'rounded-tr-lg' : ''}`}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="relative z-10 flex items-center justify-center space-x-2">
-                <span>{location.name}</span>
+              <div className="relative z-10 flex items-center justify-center space-x-3">
+                <span className="font-medium">{location.name}</span>
                 {activeLocation === location.id && (
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse shadow-lg" />
                 )}
               </div>
               {activeLocation === location.id && (
                 <motion.div
                   layoutId="activeLocationTab"
-                  className={`absolute inset-0 bg-gradient-to-r ${location.color} opacity-20 rounded-lg`}
+                  className={`absolute inset-0 bg-gradient-to-r ${location.color} rounded-lg shadow-lg`}
                   initial={false}
                   transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
                 />
@@ -125,21 +136,21 @@ const SalesAnalytics = () => {
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="bg-slate-900/50 border border-slate-800 rounded-lg p-6 backdrop-blur-sm"
+          className="bg-white dark:bg-slate-900/50 border border-gray-200 dark:border-slate-800 rounded-lg p-6 backdrop-blur-sm shadow-lg"
         >
-          <h3 className="text-lg font-semibold text-white mb-4">Customize Dashboard</h3>
+          <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4">Customize Dashboard</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Theme</label>
-              <select className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Theme</label>
+              <select className="w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white">
+                <option>Light Professional</option>
                 <option>Dark Premium</option>
-                <option>Light Modern</option>
                 <option>Auto</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Refresh Rate</label>
-              <select className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Refresh Rate</label>
+              <select className="w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white">
                 <option>30 seconds</option>
                 <option>1 minute</option>
                 <option>5 minutes</option>
@@ -147,8 +158,8 @@ const SalesAnalytics = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Layout Density</label>
-              <select className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-white">
+              <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-2">Layout Density</label>
+              <select className="w-full bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 rounded-lg px-3 py-2 text-gray-800 dark:text-white">
                 <option>Compact</option>
                 <option>Standard</option>
                 <option>Comfortable</option>
@@ -159,16 +170,16 @@ const SalesAnalytics = () => {
       )}
 
       {/* Filter Panel */}
-      <Card className="bg-slate-900/50 border-slate-800 backdrop-blur-sm">
+      <Card className="bg-white dark:bg-slate-900/50 border-gray-200 dark:border-slate-800 backdrop-blur-sm shadow-lg">
         <div className="p-4">
           <Button
             variant="ghost"
             onClick={() => setFiltersCollapsed(!filtersCollapsed)}
-            className="w-full justify-between text-white hover:bg-slate-800/50"
+            className="w-full justify-between text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-800/50"
           >
             <span className="flex items-center space-x-2">
               <span>Advanced Filters</span>
-              <Badge variant="secondary" className="bg-yellow-500/20 text-yellow-400">
+              <Badge variant="secondary" className="bg-blue-100 text-blue-600 dark:bg-yellow-500/20 dark:text-yellow-400">
                 {filtersCollapsed ? 'Collapsed' : 'Expanded'}
               </Badge>
             </span>
@@ -189,8 +200,8 @@ const SalesAnalytics = () => {
       </Card>
 
       {error && (
-        <Card className="bg-red-900/20 border-red-800 p-4">
-          <p className="text-red-400">Error loading data: {error}</p>
+        <Card className="bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 p-4">
+          <p className="text-red-600 dark:text-red-400">Error loading data: {error}</p>
         </Card>
       )}
 
@@ -199,6 +210,12 @@ const SalesAnalytics = () => {
 
       {/* Top/Bottom Performers */}
       <TopBottomPerformers data={filteredData} loading={loading} />
+
+      {/* Month-over-Month Table */}
+      <MonthOverMonthTable data={filteredData} loading={loading} />
+
+      {/* Year-over-Year Table */}
+      <YearOverYearTable data={filteredData} loading={loading} />
 
       {/* Charts */}
       <Charts data={filteredData} loading={loading} />
