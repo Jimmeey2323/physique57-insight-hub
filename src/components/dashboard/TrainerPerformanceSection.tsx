@@ -571,4 +571,8 @@ export const TrainerPerformanceSection = () => {
         {months.length > 0 && trainers.length > 0 && <YearOnYearTrainerTable data={monthOnMonthData} months={months} trainers={trainers} defaultMetric={activeMetric} />}
       </div>
     </div>;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> d8ca8b48532b3896a0d456fb80d7b6032addc6e7

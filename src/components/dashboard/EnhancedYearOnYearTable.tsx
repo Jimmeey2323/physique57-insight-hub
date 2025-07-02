@@ -349,4 +349,8 @@ export const EnhancedYearOnYearTable: React.FC<EnhancedYearOnYearTableProps> = (
         </div>
       </CardContent>
     </Card>;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> d8ca8b48532b3896a0d456fb80d7b6032addc6e7

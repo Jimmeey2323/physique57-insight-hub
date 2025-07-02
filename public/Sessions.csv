@@ -11963,4 +11963,8 @@ Trainer ID,Trainer First Name,Trainer Last Name,Trainer Name,Session ID,Session 
 81814,Vivaran ,Dhasmana,Vivaran  Dhasmana,98468520,Studio Barre 57,13,1,0,1,0,Kenkere House,04/01/2024,Thursday,19:15:00,353,0,3CYWFAQ,1,0,0,0,Barre 57,Studio Barre 57
 81814,Vivaran ,Dhasmana,Vivaran  Dhasmana,98468519,Studio Cardio Barre ,13,3,0,3,0,Kenkere House,04/01/2024,Thursday,18:00:00,679,0,YTIBOUN,3,0,0,0,Barre 57,Studio Cardio Barre
 81814,Vivaran ,Dhasmana,Vivaran  Dhasmana,98451940,Studio Barre 57,13,5,0,5,0,Kenkere House,03/01/2024,Wednesday,11:00:00,"1,453",3,96MF2NO,1,1,0,0,Barre 57,Studio Barre 57
+<<<<<<< HEAD
 81814,Vivaran ,Dhasmana,Vivaran  Dhasmana,98451932,Studio Barre 57,13,1,0,1,0,Kenkere House,03/01/2024,Wednesday,08:15:00,343,0,PB89J7P,1,0,0,0,Barre 57,Studio Barre 57
+=======
+81814,Vivaran ,Dhasmana,Vivaran  Dhasmana,98451932,Studio Barre 57,13,1,0,1,0,Kenkere House,03/01/2024,Wednesday,08:15:00,343,0,PB89J7P,1,0,0,0,Barre 57,Studio Barre 57
+>>>>>>> d8ca8b48532b3896a0d456fb80d7b6032addc6e7

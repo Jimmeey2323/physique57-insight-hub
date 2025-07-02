@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> d8ca8b48532b3896a0d456fb80d7b6032addc6e7
 export interface SalesData {
   memberId: string;
   customerName: string;
