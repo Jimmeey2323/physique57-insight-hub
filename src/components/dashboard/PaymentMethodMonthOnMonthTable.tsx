@@ -1,4 +1,3 @@
-
 import React, { useMemo, useState, useCallback } from 'react';
 import { SalesData, YearOnYearMetricType } from '@/types/dashboard';
 import { YearOnYearMetricTabs } from './YearOnYearMetricTabs';
@@ -26,12 +25,17 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
 
   const parseDate = (dateStr: string): Date | null => {
     if (!dateStr) return null;
+    
+    // Handle DD/MM/YYYY format
     const ddmmyyyy = dateStr.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
     if (ddmmyyyy) {
       const [, day, month, year] = ddmmyyyy;
       return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     }
-    return null;
+    
+    // Handle other common date formats
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
   };
 
   const getMetricValue = (items: SalesData[], metric: YearOnYearMetricType) => {
@@ -95,27 +99,24 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
     const months = [];
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     
-    for (let i = 5; i >= 0; i--) {
-      const monthName = monthNames[i];
-      const monthNum = i + 1;
-      months.push({
-        key: `2025-${String(monthNum).padStart(2, '0')}`,
-        display: `${monthName} 2025`,
-        year: 2025,
-        month: monthNum,
-        quarter: Math.ceil(monthNum / 3)
-      });
-    }
+    // Get current date for dynamic month calculation
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
     
-    for (let i = 11; i >= 0; i--) {
-      const monthName = monthNames[i];
-      const monthNum = i + 1;
+    // Generate last 18 months of data
+    for (let i = 17; i >= 0; i--) {
+      const date = new Date(currentYear, currentMonth - i, 1);
+      const year = date.getFullYear();
+      const month = date.getMonth() + 1;
+      const monthName = monthNames[date.getMonth()];
+      
       months.push({
-        key: `2024-${String(monthNum).padStart(2, '0')}`,
-        display: `${monthName} 2024`,
-        year: 2024,
-        month: monthNum,
-        quarter: Math.ceil(monthNum / 3)
+        key: `${year}-${String(month).padStart(2, '0')}`,
+        display: `${monthName} ${year}`,
+        year: year,
+        month: month,
+        quarter: Math.ceil(month / 3)
       });
     }
     
@@ -123,6 +124,8 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
   }, []);
 
   const processedData = useMemo(() => {
+    console.log('Processing payment method data:', data.length, 'records');
+    
     const paymentMethodGroups = data.reduce((acc: Record<string, SalesData[]>, item) => {
       const paymentMethod = item.paymentMethod || 'Unknown';
       if (!acc[paymentMethod]) {
@@ -132,14 +135,19 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
       return acc;
     }, {});
 
+    console.log('Payment method groups:', Object.keys(paymentMethodGroups));
+
     const paymentMethodData = Object.entries(paymentMethodGroups).map(([paymentMethod, items]) => {
       const monthlyValues: Record<string, number> = {};
 
       monthlyData.forEach(({ key, year, month }) => {
         const monthItems = items.filter(item => {
           const itemDate = parseDate(item.paymentDate);
-          return itemDate && itemDate.getFullYear() === year && itemDate.getMonth() + 1 === month;
+          if (!itemDate) return false;
+          
+          return itemDate.getFullYear() === year && itemDate.getMonth() + 1 === month;
         });
+        
         monthlyValues[key] = getMetricValue(monthItems, selectedMetric);
       });
 
@@ -152,6 +160,9 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
         rawData: items
       };
     });
+
+    console.log('Processed payment method data:', paymentMethodData.length, 'methods');
+    console.log('Sample method data:', paymentMethodData[0]);
 
     return paymentMethodData.sort((a, b) => b.metricValue - a.metricValue);
   }, [data, selectedMetric, monthlyData]);
@@ -226,7 +237,7 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
                 Payment Method Month-on-Month Analysis
               </CardTitle>
               <p className="text-sm text-gray-600 mt-1">
-                Monthly performance metrics by payment method (Jun 2025 - Jan 2024)
+                Monthly performance metrics by payment method ({data.length} total records)
               </p>
             </div>
           </div>
@@ -240,16 +251,9 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
           <table className="min-w-full bg-white border-t border-gray-200 rounded-lg">
             <thead className="bg-gradient-to-r from-blue-700 to-blue-900 text-white font-semibold text-sm uppercase tracking-wider sticky top-0 z-20">
               <tr>
-                <th rowSpan={2} className="text-white font-semibold uppercase tracking-wider px-6 py-3 text-left rounded-tl-lg sticky left-0 bg-blue-800 z-30">Payment Method</th>
-                {Object.entries(groupedMonths).map(([quarterKey, months]) => (
-                  <th key={quarterKey} colSpan={months.length} className="text-white font-semibold text-sm uppercase tracking-wider px-4 py-2 text-center border-l border-blue-600">
-                    {quarterKey}
-                  </th>
-                ))}
-              </tr>
-              <tr>
+                <th className="text-white font-semibold uppercase tracking-wider px-6 py-3 text-left rounded-tl-lg sticky left-0 bg-blue-800 z-30">Payment Method</th>
                 {monthlyData.map(({ key, display }) => (
-                  <th key={key} className="text-white font-semibold text-xs uppercase tracking-wider px-3 py-2 bg-blue-800 border-l border-blue-600">
+                  <th key={key} className="text-white font-semibold text-xs uppercase tracking-wider px-3 py-2 bg-blue-800 border-l border-blue-600 min-w-32">
                     <div className="flex flex-col">
                       <span className="text-sm">{display.split(' ')[0]}</span>
                       <span className="text-blue-200 text-xs">{display.split(' ')[1]}</span>
@@ -285,7 +289,6 @@ export const PaymentMethodMonthOnMonthTable: React.FC<PaymentMethodMonthOnMonthT
                   })}
                 </tr>
               ))}
-              {/* Totals Row */}
               <tr className="bg-gradient-to-r from-blue-50 to-blue-100 border-t-2 border-blue-200 font-bold">
                 <td className="px-6 py-3 text-sm font-bold text-blue-900 sticky left-0 bg-blue-100 border-r border-blue-200">
                   TOTAL
