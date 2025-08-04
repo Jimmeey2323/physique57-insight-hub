@@ -142,7 +142,7 @@ export const EnhancedYearOnYearTable: React.FC<EnhancedYearOnYearTableProps> = (
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     // Create alternating pattern: Jun-2024, Jun-2025, May-2024, May-2025, etc.
-    for (let i = 5; i >= 0; i--) {
+    for (let i = 7; i >= 0; i--) {
       // Jun to Jan (descending)
       const monthName = monthNames[i];
       const monthNum = i + 1;
