@@ -1,3 +1,4 @@
+
 import React, { useMemo, useState } from 'react';
 import { SalesData, YearOnYearMetricType } from '@/types/dashboard';
 import { YearOnYearMetricTabs } from './YearOnYearMetricTabs';
@@ -94,20 +95,26 @@ export const SoldByMonthOnMonthTable: React.FC<SoldByMonthOnMonthTableProps> = (
     const currentYear = now.getFullYear();
     const currentMonth = now.getMonth();
     
-    // Generate last 18 months of data
-    for (let i = 17; i >= 0; i--) {
-      const date = new Date(currentYear, currentMonth - i, 1);
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
-      const monthName = monthNames[date.getMonth()];
+    // Generate last 18 months of data dynamically
+    let year = currentYear;
+    let month = currentMonth;
+    
+    for (let i = 0; i < 18; i++) {
+      const monthName = monthNames[month];
       
       months.push({
-        key: `${year}-${String(month).padStart(2, '0')}`,
+        key: `${year}-${String(month + 1).padStart(2, '0')}`,
         display: `${monthName} ${year}`,
         year: year,
-        month: month,
-        quarter: Math.ceil(month / 3)
+        month: month + 1,
+        quarter: Math.ceil((month + 1) / 3)
       });
+      
+      month--;
+      if (month < 0) {
+        month = 11;
+        year--;
+      }
     }
     
     return months;

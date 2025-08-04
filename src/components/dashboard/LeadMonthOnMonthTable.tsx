@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow, TableFooter } from '@/components/ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -35,28 +34,33 @@ export const LeadMonthOnMonthTable: React.FC<LeadMonthOnMonthTableProps> = ({
     pipeline: "$2.8M total pipeline value across all active stages"
   });
 
-  // Create comprehensive month range from June 2025 to January 2024
+  // Create comprehensive month range dynamically based on current date
   const generateMonthRange = () => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const generatedMonths = [];
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth(); // 0-based
 
-    // Start from June 2025 and go backwards to January 2024
-    let currentYear = 2025;
-    let currentMonth = 5; // June (0-based)
+    // Start from current month and go backwards 18 months
+    let year = currentYear;
+    let month = currentMonth;
 
-    while (currentYear > 2024 || currentYear === 2024 && currentMonth >= 0) {
-      const monthKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    for (let i = 0; i < 18; i++) {
+      const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
       generatedMonths.push({
         original: monthKey,
-        formatted: `${monthNames[currentMonth]} ${currentYear}`,
-        sortKey: new Date(currentYear, currentMonth).getTime()
+        formatted: `${monthNames[month]} ${year}`,
+        sortKey: new Date(year, month).getTime()
       });
-      currentMonth--;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
+      
+      month--;
+      if (month < 0) {
+        month = 11;
+        year--;
       }
     }
+    
     return generatedMonths;
   };
   const formattedMonths = generateMonthRange();

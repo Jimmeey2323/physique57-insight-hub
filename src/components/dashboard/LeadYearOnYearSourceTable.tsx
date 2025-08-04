@@ -61,9 +61,16 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
       return acc;
     }, {} as Record<string, Record<string, any>>);
 
-    // Generate month pairs (2024, 2025) in descending order
+    // Generate month pairs (2024, 2025) dynamically based on current date
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth() + 1;
+    
     const months = [];
-    for (let month = 6; month >= 1; month--) {
+    // Show up to current month for current year, and all 12 months for previous year
+    const endMonth = currentYear === 2025 ? currentMonth : 12;
+    
+    for (let month = endMonth; month >= 1; month--) {
       const monthKey = String(month).padStart(2, '0');
       months.push({
         month,
@@ -74,6 +81,7 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
         key2025: `2025-${monthKey}`
       });
     }
+
     const result = Object.entries(sourceStats).map(([source, monthData]) => {
       const sourceResult = {
         source,
@@ -162,7 +170,7 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
       }
     };
     const monthNumbers = [];
-    for (let month = 6; month >= 1; month--) {
+    for (let month = endMonth; month >= 1; month--) {
       monthNumbers.push(month);
     }
     monthNumbers.forEach(month => {
@@ -192,6 +200,7 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
     });
     return [...sortedResult, totalsRow];
   }, [allData, activeMetric, sortField, sortDirection]);
+
   const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -217,6 +226,13 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
   const handleExport = () => {
     console.log('Exporting year-on-year source data...');
   };
+
+  // Get current date info for dynamic month display
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1;
+  const endMonth = currentYear === 2025 ? currentMonth : 12;
+
   return (
     <Card className="bg-white shadow-xl border-0 overflow-hidden rounded-2xl">
       <CardHeader className="bg-gradient-to-br from-indigo-800 to-pink-900 border-b border-slate-200 space-y-1">
@@ -249,7 +265,7 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                     Lead Source <SortIcon field="source" />
                   </div>
                 </TableHead>
-                {[6, 5, 4, 3, 2, 1].map(month => {
+                {Array.from({ length: endMonth }, (_, i) => endMonth - i).map(month => {
                   const monthName = new Date(2025, month - 1).toLocaleString('default', {
                     month: 'short'
                   });
@@ -293,22 +309,22 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                         </span>
                       </div>
                     </TableCell>
-                    {[6, 5, 4, 3, 2, 1].map(month => {
+                    {Array.from({ length: endMonth }, (_, i) => endMonth - i).map(month => {
                       const monthData = sourceData.months[month];
                       return (
                         <React.Fragment key={month}>
                           <TableCell className="text-center font-mono p-3 border-r border-slate-100 text-sm">
-                            <span className="text-slate-600">{formatValue(monthData.value2024)}</span>
+                            <span className="text-slate-600">{formatValue(monthData?.value2024 || 0)}</span>
                           </TableCell>
                           <TableCell className="text-center font-mono p-3 border-r border-slate-100 text-sm">
                             <span className="font-semibold text-slate-800">
-                              {formatValue(monthData.value2025)}
+                              {formatValue(monthData?.value2025 || 0)}
                             </span>
                           </TableCell>
                           <TableCell className="text-center p-3 border-r-2 border-slate-100">
-                            <div className={`flex items-center justify-center gap-1 font-bold text-xs ${monthData.growth > 0 ? 'text-emerald-600' : monthData.growth < 0 ? 'text-red-600' : 'text-slate-500'}`}>
-                              {monthData.growth > 0 ? <TrendingUp className="w-3 h-3" /> : monthData.growth < 0 ? <TrendingDown className="w-3 h-3" /> : null}
-                              {monthData.growth.toFixed(1)}%
+                            <div className={`flex items-center justify-center gap-1 font-bold text-xs ${(monthData?.growth || 0) > 0 ? 'text-emerald-600' : (monthData?.growth || 0) < 0 ? 'text-red-600' : 'text-slate-500'}`}>
+                              {(monthData?.growth || 0) > 0 ? <TrendingUp className="w-3 h-3" /> : (monthData?.growth || 0) < 0 ? <TrendingDown className="w-3 h-3" /> : null}
+                              {(monthData?.growth || 0).toFixed(1)}%
                             </div>
                           </TableCell>
                         </React.Fragment>
@@ -330,22 +346,22 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                   <TableCell className="font-bold text-white sticky left-0 bg-black z-30 min-w-[200px] p-4">
                     <span className="text-lg font-bold">TOTAL</span>
                   </TableCell>
-                  {[6, 5, 4, 3, 2, 1].map(month => {
+                  {Array.from({ length: endMonth }, (_, i) => endMonth - i).map(month => {
                     const monthData = totalsData.months[month];
                     return (
                       <React.Fragment key={month}>
                         <TableCell className="text-center font-mono p-3 border-r border-gray-600 font-bold text-base">
-                          <span className="text-gray-300">{formatValue(monthData.value2024)}</span>
+                          <span className="text-gray-300">{formatValue(monthData?.value2024 || 0)}</span>
                         </TableCell>
                         <TableCell className="text-center font-mono p-3 border-r border-gray-600 font-bold text-base">
                           <span className="text-white">
-                            {formatValue(monthData.value2025)}
+                            {formatValue(monthData?.value2025 || 0)}
                           </span>
                         </TableCell>
                         <TableCell className="text-center p-3 border-r-2 border-gray-600">
-                          <div className={`flex items-center justify-center gap-1 font-bold text-base ${monthData.growth > 0 ? 'text-emerald-400' : monthData.growth < 0 ? 'text-red-400' : 'text-gray-400'}`}>
-                            {monthData.growth > 0 ? <TrendingUp className="w-4 h-4" /> : monthData.growth < 0 ? <TrendingDown className="w-4 h-4" /> : null}
-                            {monthData.growth.toFixed(1)}%
+                          <div className={`flex items-center justify-center gap-1 font-bold text-base ${(monthData?.growth || 0) > 0 ? 'text-emerald-400' : (monthData?.growth || 0) < 0 ? 'text-red-400' : 'text-gray-400'}`}>
+                            {(monthData?.growth || 0) > 0 ? <TrendingUp className="w-4 h-4" /> : (monthData?.growth || 0) < 0 ? <TrendingDown className="w-4 h-4" /> : null}
+                            {(monthData?.growth || 0).toFixed(1)}%
                           </div>
                         </TableCell>
                       </React.Fragment>

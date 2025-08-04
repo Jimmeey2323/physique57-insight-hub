@@ -34,29 +34,37 @@ export const LeadSourceMonthOnMonthTable: React.FC<LeadSourceMonthOnMonthTablePr
     referral: "Referral program generates highest quality leads with 67% trial rate"
   });
 
-  // Create comprehensive month range from June 2025 to January 2024
+  // Create comprehensive month range dynamically based on current date
   const generateMonthRange = () => {
     const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     const generatedMonths = [];
-    let currentYear = 2025;
-    let currentMonth = 5;
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth(); // 0-based
 
-    while (currentYear > 2024 || currentYear === 2024 && currentMonth >= 0) {
-      const monthKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+    // Start from current month and go backwards 18 months
+    let year = currentYear;
+    let month = currentMonth;
+
+    for (let i = 0; i < 18; i++) {
+      const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
       generatedMonths.push({
         original: monthKey,
-        formatted: `${monthNames[currentMonth]} ${currentYear}`,
-        sortKey: new Date(currentYear, currentMonth).getTime()
+        formatted: `${monthNames[month]} ${year}`,
+        sortKey: new Date(year, month).getTime()
       });
-      currentMonth--;
-      if (currentMonth < 0) {
-        currentMonth = 11;
-        currentYear--;
+      
+      month--;
+      if (month < 0) {
+        month = 11;
+        year--;
       }
     }
+    
     return generatedMonths;
   };
   const formattedMonths = generateMonthRange();
+
   const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
