@@ -1,144 +1,124 @@
-
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Footer } from '@/components/ui/footer';
-import { TrendingUp, BarChart3, DollarSign, Users } from 'lucide-react';
+import { DashboardGrid } from '@/components/dashboard/DashboardGrid';
+import { useGoogleSheets } from '@/hooks/useGoogleSheets';
+import { Card, CardContent } from '@/components/ui/card';
+import { AlertCircle, RefreshCw } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
+import { designTokens } from '@/utils/designTokens';
 
+// Memoized stats card component
+const StatsCard = memo(({
+  title,
+  subtitle
+}: {
+  title: string;
+  subtitle: string;
+}) => <div className={`${designTokens.card.background} backdrop-blur-sm rounded-xl px-6 py-4 ${designTokens.card.shadow} border border-slate-200/50 transform hover:scale-105 transition-all duration-300`}>
+    <div className="text-2xl font-bold text-slate-900">{title}</div>
+    <div className="text-xs text-slate-600 font-medium">{subtitle}</div>
+  </div>);
 const Index = () => {
   const navigate = useNavigate();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20">
-      {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-indigo-900 via-purple-800 to-indigo-700 text-white">
-        <div className="absolute inset-0 bg-black/20" />
-        
-        {/* Animated background elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-4 -left-4 w-32 h-32 bg-white/10 rounded-full animate-pulse"></div>
-          <div className="absolute top-20 right-10 w-24 h-24 bg-indigo-300/20 rounded-full animate-bounce delay-1000"></div>
-          <div className="absolute bottom-10 left-20 w-40 h-40 bg-purple-300/10 rounded-full animate-pulse delay-500"></div>
+  const {
+    data,
+    loading,
+    error,
+    refetch
+  } = useGoogleSheets();
+  const handleSectionClick = useCallback((sectionId: string) => {
+    navigate(`/${sectionId}`);
+  }, [navigate]);
+  const handleRetry = useCallback(() => {
+    refetch();
+  }, [refetch]);
+  if (loading) {
+    return <div className="min-h-screen bg-white relative overflow-hidden">
+        <div className="container mx-auto px-8 py-8">
+          <LoadingSkeleton type="full-page" />
         </div>
-        
-        <div className="relative px-8 py-16">
-          <div className="max-w-7xl mx-auto text-center">
-            <div className="inline-flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-full px-6 py-2 border border-white/20 mb-8 animate-fade-in-up">
-              <TrendingUp className="w-5 h-5" />
-              <span className="font-medium">Sales Analytics Dashboard</span>
+      </div>;
+  }
+  if (error) {
+    return <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-gray-50 flex items-center justify-center p-4">
+        <Card className={`p-12 ${designTokens.card.background} backdrop-blur-sm ${designTokens.card.shadow} ${designTokens.card.border} rounded-2xl max-w-lg`}>
+          <CardContent className="text-center space-y-6">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto" />
+            <div>
+              <p className="text-xl font-semibold text-slate-800">Connection Error</p>
+              <p className="text-sm text-slate-600 mt-2">{error}</p>
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-white via-indigo-100 to-purple-100 bg-clip-text text-transparent mb-6 animate-fade-in-up delay-200">
-              Sales Analytics
-            </h1>
-            
-            <p className="text-xl text-indigo-100 max-w-3xl mx-auto leading-relaxed mb-12 animate-fade-in-up delay-300">
-              Comprehensive sales performance analysis, revenue insights, and customer analytics to drive business growth
-            </p>
-            
-            <Button 
-              onClick={() => navigate('/sales-analytics')} 
-              size="lg"
-              className="bg-white text-indigo-900 hover:bg-white/90 font-bold px-8 py-6 text-lg shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 animate-fade-in-up delay-400"
-            >
-              <BarChart3 className="w-6 h-6 mr-3" />
-              View Analytics Dashboard
+            <Button onClick={handleRetry} className="gap-2 bg-slate-800 hover:bg-slate-900 text-white">
+              <RefreshCw className="w-4 h-4" />
+              Retry Connection
             </Button>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
+      </div>;
+  }
+  return <div className="min-h-screen bg-white relative overflow-hidden">
+      {/* Simplified Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-50/20 via-purple-50/10 to-pink-50/20"></div>
       </div>
 
-      {/* Features Overview */}
-      <div className="container mx-auto px-6 py-16">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Powerful Sales Insights
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get deep insights into your sales performance with advanced analytics and visualizations
+      {/* Content */}
+      <div className="relative z-10">
+        <div className="container mx-auto px-6 py-8">
+          {/* Compact Header Section */}
+          <header className="mb-8 text-center">
+            <div className="inline-flex items-center justify-center mb-4">
+              <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white px-4 py-2 text-sm font-medium shadow-lg tracking-wide min-w-full w-full fixed top-0 left-0 z-50 rounded-none">
+                Business Intelligence Dashboard
+              </div>
+            </div>
+            
+            <h1 className="text-4xl md:text-xl font-light text-slate-900 mb-2 tracking-tight font-serif text-center mb-4">
+              <span className="font-extralight text-8xl">Physique</span>{' '}
+              <span className="font-bold animate-color-cycle text-9xl">57</span>
+              <span className="text-slate-600 font-light text-7xl">, India</span>
+            </h1>
+            
+            <p className="text-lg text-slate-600 font-light mb-6 max-w-3xl mx-auto leading-relaxed mt-8">
+              Advanced Business Analytics
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gradient-to-br from-white via-blue-50/30 to-white border-0 shadow-xl">
-              <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <DollarSign className="w-6 h-6 text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-gray-900">Revenue Analytics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 leading-relaxed">
-                  Track total revenue, net revenue, VAT collections, and revenue trends across different time periods
-                </p>
-              </CardContent>
-            </Card>
+            
+            {/* Compact Stats Cards */}
+            <div className="flex flex-wrap justify-center gap-4 mb-6">
+              <StatsCard title="Real-time" subtitle="Data Insights" />
+              <StatsCard title="8+" subtitle="Analytics Modules" />
+              <StatsCard title="Precision" subtitle="Data Accuracy" />
+            </div>
 
-            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gradient-to-br from-white via-purple-50/30 to-white border-0 shadow-xl">
-              <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <BarChart3 className="w-6 h-6 text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-gray-900">Performance Metrics</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 leading-relaxed">
-                  Monitor ATV, AUV, ASV, UPT and other key performance indicators with interactive charts
-                </p>
-              </CardContent>
-            </Card>
+            <div className="w-16 h-px bg-slate-300 mx-auto mb-4"></div>
+          </header>
 
-            <Card className="group hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gradient-to-br from-white via-green-50/30 to-white border-0 shadow-xl">
-              <CardHeader>
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Users className="w-6 h-6 text-white" />
-                </div>
-                <CardTitle className="text-xl font-bold text-gray-900">Customer Insights</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 leading-relaxed">
-                  Analyze customer behavior, spending patterns, and sales associate performance
-                </p>
-              </CardContent>
-            </Card>
-          </div>
+          {/* Dashboard Grid - More Prominent */}
+          <main className="max-w-7xl mx-auto">
+            <div className="min-w-full ">
+              <DashboardGrid onButtonClick={handleSectionClick} />
+            </div>
+          </main>
         </div>
       </div>
       
       <Footer />
-
+      
       <style>{`
-        @keyframes fade-in-up {
-          from {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        @keyframes color-cycle {
+          0% { color: #3b82f6; }
+          25% { color: #ef4444; }
+          50% { color: #6366f1; }
+          75% { color: #8b5cf6; }
+          100% { color: #3b82f6; }
         }
         
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out forwards;
-        }
-        
-        .delay-200 {
-          animation-delay: 0.2s;
-        }
-        
-        .delay-300 {
-          animation-delay: 0.3s;
-        }
-        
-        .delay-400 {
-          animation-delay: 0.4s;
+        .animate-color-cycle {
+          animation: color-cycle 4s infinite ease-in-out;
         }
       `}</style>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
