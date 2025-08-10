@@ -37,7 +37,7 @@ const GOOGLE_CONFIG = {
   TOKEN_URL: "https://oauth2.googleapis.com/token"
 };
 
-const SPREADSHEET_ID = "1ms082PTG8lt566ndWBf687baIl-knERPL1r2v7-dPxg";
+const SPREADSHEET_ID = "149ILDqovzZA6FRUJKOwzutWdVqmqWBtWPfzG3A0zxTI";
 
 export const useSessionsData = () => {
   const [data, setData] = useState<SessionData[]>([]);
@@ -82,7 +82,7 @@ export const useSessionsData = () => {
       const accessToken = await getAccessToken();
       
       const response = await fetch(
-        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/◉ Sessions?alt=json`,
+        `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/Sessions?alt=json`,
         {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
