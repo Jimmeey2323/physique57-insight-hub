@@ -262,7 +262,7 @@ export const LeadInteractiveChart: React.FC<LeadInteractiveChartProps> = ({
         
         {/* Chart Summary */}
         <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="bg-white text-gray-900 border-4 border-gray-100 p-4 rounded-lg shadow-gray-800 shadow-xl hover:scale-110 ">
+          <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-br-lg ">
             <div className="flex items-center gap-2">
               <Users className="w-5 h-5 text-blue-600" />
               <span className="text-sm font-medium text-blue-800">Total Leads</span>
