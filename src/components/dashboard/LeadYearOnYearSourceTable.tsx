@@ -7,13 +7,11 @@ import { ChevronDown, ChevronUp, TrendingUp, TrendingDown, Calendar, Download } 
 import { LeadMetricTabs } from './LeadMetricTabs';
 import { LeadsMetricType, LeadsData } from '@/types/leads';
 import { formatNumber, formatCurrency, formatPercentage } from '@/utils/formatters';
-
 interface LeadYearOnYearSourceTableProps {
   allData: LeadsData[]; // Use unfiltered data for year-on-year comparison
   activeMetric: LeadsMetricType;
   onMetricChange: (metric: LeadsMetricType) => void;
 }
-
 export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps> = ({
   allData,
   activeMetric,
@@ -65,11 +63,9 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
-    
     const months = [];
     // Show up to current month for current year, and all 12 months for previous year
     const endMonth = currentYear === 2025 ? currentMonth : 12;
-    
     for (let month = endMonth; month >= 1; month--) {
       const monthKey = String(month).padStart(2, '0');
       months.push({
@@ -81,7 +77,6 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
         key2025: `2025-${monthKey}`
       });
     }
-
     const result = Object.entries(sourceStats).map(([source, monthData]) => {
       const sourceResult = {
         source,
@@ -200,7 +195,6 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
     });
     return [...sortedResult, totalsRow];
   }, [allData, activeMetric, sortField, sortDirection]);
-
   const handleSort = (field: string) => {
     if (sortField === field) {
       setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
@@ -232,9 +226,7 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
   const endMonth = currentYear === 2025 ? currentMonth : 12;
-
-  return (
-    <Card className="bg-white shadow-xl border-0 overflow-hidden rounded-2xl">
+  return <Card className="bg-white shadow-xl border-0 overflow-hidden rounded-2xl">
       <CardHeader className="bg-gradient-to-br from-indigo-800 to-pink-900 border-b border-slate-200 space-y-1">
         <div className="flex items-center justify-between">
           <CardTitle className="text-white flex items-center gap-2 text-xl font-bold">
@@ -259,18 +251,19 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
         <div className="overflow-x-auto max-h-[700px] overflow-y-auto">
           <Table className="rounded-lg">
             <TableHeader className="sticky top-0 z-20">
-              <TableRow className="bg-gradient-to-r from-gray-700 via-gray-900 to-black text-white hover:bg-gradient-to-r hover:from-gray-700 hover:to-black">
+              <TableRow className="bg-gradient-to-r from-gray-900 via-gray-900 to-black text-white hover:bg-gradient-to-r hover:from-gray-900 hover:to-black">
                 <TableHead className="cursor-pointer hover:bg-slate-700 transition-colors font-bold text-white sticky left-0 bg-gradient-to-r from-slate-800 to-slate-900 z-30 min-w-[200px] p-4" onClick={() => handleSort('source')}>
                   <div className="flex items-center gap-2 text-sm font-bold">
                     Lead Source <SortIcon field="source" />
                   </div>
                 </TableHead>
-                {Array.from({ length: endMonth }, (_, i) => endMonth - i).map(month => {
-                  const monthName = new Date(2025, month - 1).toLocaleString('default', {
-                    month: 'short'
-                  });
-                  return (
-                    <React.Fragment key={month}>
+                {Array.from({
+                length: endMonth
+              }, (_, i) => endMonth - i).map(month => {
+                const monthName = new Date(2025, month - 1).toLocaleString('default', {
+                  month: 'short'
+                });
+                return <React.Fragment key={month}>
                       <TableHead className="text-center font-bold text-slate-300 min-w-[100px] p-3 border-r border-slate-600">
                         <div className="text-xs">
                           <div>{monthName} 2024</div>
@@ -284,9 +277,8 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                       <TableHead className="text-center font-bold text-amber-300 min-w-[90px] p-3 border-r-2 border-slate-500">
                         <div className="text-xs">Growth %</div>
                       </TableHead>
-                    </React.Fragment>
-                  );
-                })}
+                    </React.Fragment>;
+              })}
                 <TableHead className="cursor-pointer hover:bg-slate-700 transition-colors text-center font-bold text-amber-200 min-w-[120px] p-3" onClick={() => handleSort('growth')}>
                   <div className="flex items-center justify-center gap-1 text-sm font-bold">
                     Total Growth <SortIcon field="growth" />
@@ -295,12 +287,11 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {processedData.map((sourceData) => {
-                const isTotal = sourceData.source === 'TOTAL';
-                if (isTotal) return null; // Skip the totals row in the body
+              {processedData.map(sourceData => {
+              const isTotal = sourceData.source === 'TOTAL';
+              if (isTotal) return null; // Skip the totals row in the body
 
-                return (
-                  <TableRow key={sourceData.source} className="border-b border-gray-200">
+              return <TableRow key={sourceData.source} className="border-b border-gray-200">
                     <TableCell className="font-medium sticky left-0 z-10 border-r border-slate-200 min-w-[200px] p-4 bg-white text-slate-800">
                       <div className="flex items-center gap-2">
                         <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex-shrink-0"></div>
@@ -309,10 +300,11 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                         </span>
                       </div>
                     </TableCell>
-                    {Array.from({ length: endMonth }, (_, i) => endMonth - i).map(month => {
-                      const monthData = sourceData.months[month];
-                      return (
-                        <React.Fragment key={month}>
+                    {Array.from({
+                  length: endMonth
+                }, (_, i) => endMonth - i).map(month => {
+                  const monthData = sourceData.months[month];
+                  return <React.Fragment key={month}>
                           <TableCell className="text-center font-mono p-3 border-r border-slate-100 text-sm">
                             <span className="text-slate-600">{formatValue(monthData?.value2024 || 0)}</span>
                           </TableCell>
@@ -327,29 +319,27 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                               {(monthData?.growth || 0).toFixed(1)}%
                             </div>
                           </TableCell>
-                        </React.Fragment>
-                      );
-                    })}
+                        </React.Fragment>;
+                })}
                     <TableCell className="text-center p-3">
                       <div className={`flex items-center justify-center gap-1 font-bold text-sm ${sourceData.totals.growth > 0 ? 'text-emerald-600' : sourceData.totals.growth < 0 ? 'text-red-600' : 'text-slate-500'}`}>
                         {sourceData.totals.growth > 0 ? <TrendingUp className="w-4 h-4" /> : sourceData.totals.growth < 0 ? <TrendingDown className="w-4 h-4" /> : null}
                         {sourceData.totals.growth.toFixed(1)}%
                       </div>
                     </TableCell>
-                  </TableRow>
-                );
-              })}
+                  </TableRow>;
+            })}
             </TableBody>
             <TableFooter className="sticky bottom-0 z-20">
-              {processedData.filter(data => data.source === 'TOTAL').map((totalsData) => (
-                <TableRow key="totals" className="bg-black text-white border-t-4 border-indigo-600">
+              {processedData.filter(data => data.source === 'TOTAL').map(totalsData => <TableRow key="totals" className="bg-black text-white border-t-4 border-indigo-600">
                   <TableCell className="font-bold text-white sticky left-0 bg-black z-30 min-w-[200px] p-4">
                     <span className="text-lg font-bold">TOTAL</span>
                   </TableCell>
-                  {Array.from({ length: endMonth }, (_, i) => endMonth - i).map(month => {
-                    const monthData = totalsData.months[month];
-                    return (
-                      <React.Fragment key={month}>
+                  {Array.from({
+                length: endMonth
+              }, (_, i) => endMonth - i).map(month => {
+                const monthData = totalsData.months[month];
+                return <React.Fragment key={month}>
                         <TableCell className="text-center font-mono p-3 border-r border-gray-600 font-bold text-base">
                           <span className="text-gray-300">{formatValue(monthData?.value2024 || 0)}</span>
                         </TableCell>
@@ -364,29 +354,24 @@ export const LeadYearOnYearSourceTable: React.FC<LeadYearOnYearSourceTableProps>
                             {(monthData?.growth || 0).toFixed(1)}%
                           </div>
                         </TableCell>
-                      </React.Fragment>
-                    );
-                  })}
+                      </React.Fragment>;
+              })}
                   <TableCell className="text-center p-3">
                     <div className={`flex items-center justify-center gap-1 font-bold text-lg ${totalsData.totals.growth > 0 ? 'text-emerald-400' : totalsData.totals.growth < 0 ? 'text-red-400' : 'text-gray-400'}`}>
                       {totalsData.totals.growth > 0 ? <TrendingUp className="w-5 h-5" /> : totalsData.totals.growth < 0 ? <TrendingDown className="w-5 h-5" /> : null}
                       {totalsData.totals.growth.toFixed(1)}%
                     </div>
                   </TableCell>
-                </TableRow>
-              ))}
+                </TableRow>)}
             </TableFooter>
           </Table>
         </div>
         
-        {processedData.length <= 1 && (
-          <div className="text-center py-12 text-slate-500">
+        {processedData.length <= 1 && <div className="text-center py-12 text-slate-500">
             <Calendar className="w-12 h-12 text-slate-400 mx-auto mb-3" />
             <p className="font-medium">No year-on-year data available</p>
             <p className="text-sm">Data comparison requires leads from both 2024 and 2025</p>
-          </div>
-        )}
+          </div>}
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
