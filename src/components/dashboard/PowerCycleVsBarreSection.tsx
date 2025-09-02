@@ -54,6 +54,59 @@ export const PowerCycleVsBarreSection: React.FC = () => {
     });
   }, [powerCycleVsBarreData]);
 
+  // Calculate metrics for comparison
+  const powerCycleMetrics = React.useMemo(() => {
+    const totalSessions = powerCycleData.length;
+    const totalAttendance = powerCycleData.reduce((sum, session) => sum + ((session as any).attended || 0), 0);
+    const totalCapacity = powerCycleData.reduce((sum, session) => sum + ((session as any).capacity || 0), 0);
+    const totalBookings = powerCycleData.reduce((sum, session) => sum + ((session as any).booked || 0), 0);
+    const emptySessions = powerCycleData.filter(session => ((session as any).attended || 0) === 0).length;
+    const avgFillRate = totalCapacity > 0 ? (totalAttendance / totalCapacity) * 100 : 0;
+    const avgSessionSize = totalSessions > 0 ? totalAttendance / totalSessions : 0;
+    const sessionsWithAttendance = powerCycleData.filter(session => ((session as any).attended || 0) > 0);
+    const avgSessionSizeExclEmpty = sessionsWithAttendance.length > 0 ? 
+      sessionsWithAttendance.reduce((sum, session) => sum + ((session as any).attended || 0), 0) / sessionsWithAttendance.length : 0;
+    const noShows = powerCycleData.reduce((sum, session) => sum + Math.max(0, ((session as any).booked || 0) - ((session as any).attended || 0)), 0);
+
+    return {
+      totalSessions,
+      totalAttendance,
+      totalCapacity,
+      totalBookings,
+      emptySessions,
+      avgFillRate,
+      avgSessionSize,
+      avgSessionSizeExclEmpty,
+      noShows
+    };
+  }, [powerCycleData]);
+
+  const barreMetrics = React.useMemo(() => {
+    const totalSessions = barreData.length;
+    const totalAttendance = barreData.reduce((sum, session) => sum + ((session as any).attended || 0), 0);
+    const totalCapacity = barreData.reduce((sum, session) => sum + ((session as any).capacity || 0), 0);
+    const totalBookings = barreData.reduce((sum, session) => sum + ((session as any).booked || 0), 0);
+    const emptySessions = barreData.filter(session => ((session as any).attended || 0) === 0).length;
+    const avgFillRate = totalCapacity > 0 ? (totalAttendance / totalCapacity) * 100 : 0;
+    const avgSessionSize = totalSessions > 0 ? totalAttendance / totalSessions : 0;
+    const sessionsWithAttendance = barreData.filter(session => ((session as any).attended || 0) > 0);
+    const avgSessionSizeExclEmpty = sessionsWithAttendance.length > 0 ? 
+      sessionsWithAttendance.reduce((sum, session) => sum + ((session as any).attended || 0), 0) / sessionsWithAttendance.length : 0;
+    const noShows = barreData.reduce((sum, session) => sum + Math.max(0, ((session as any).booked || 0) - ((session as any).attended || 0)), 0);
+
+    return {
+      totalSessions,
+      totalAttendance,
+      totalCapacity,
+      totalBookings,
+      emptySessions,
+      avgFillRate,
+      avgSessionSize,
+      avgSessionSizeExclEmpty,
+      noShows
+    };
+  }, [barreData]);
+
   const handleItemClick = (item: any) => {
     setDrillDownData(item);
   };
@@ -107,22 +160,22 @@ export const PowerCycleVsBarreSection: React.FC = () => {
         </Card>
 
         <TabsContent value="overview" className="space-y-8">
-          <PowerCycleVsBarreComparison powerCycleData={powerCycleData} barreData={barreData} />
-          <PowerCycleVsBarreCharts powerCycleData={powerCycleData} barreData={barreData} />
+          <PowerCycleVsBarreComparison powerCycleMetrics={powerCycleMetrics} barreMetrics={barreMetrics} />
+          <PowerCycleVsBarreCharts powerCycleData={powerCycleData as any} barreData={barreData as any} />
         </TabsContent>
 
         <TabsContent value="comparison" className="space-y-8">
-          <PowerCycleVsBarreComparison powerCycleData={powerCycleData} barreData={barreData} />
+          <PowerCycleVsBarreComparison powerCycleMetrics={powerCycleMetrics} barreMetrics={barreMetrics} />
         </TabsContent>
 
         <TabsContent value="charts" className="space-y-8">
-          <PowerCycleVsBarreCharts powerCycleData={powerCycleData} barreData={barreData} />
+          <PowerCycleVsBarreCharts powerCycleData={powerCycleData as any} barreData={barreData as any} />
         </TabsContent>
 
         <TabsContent value="performance" className="space-y-8">
           <PowerCycleVsBarreTopBottomLists 
-            powerCycleData={powerCycleData} 
-            barreData={barreData} 
+            powerCycleData={powerCycleData as any}
+            barreData={barreData as any}
             onItemClick={handleItemClick} 
           />
         </TabsContent>

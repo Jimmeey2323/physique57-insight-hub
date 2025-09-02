@@ -161,10 +161,10 @@ const DiscountsPromotions: React.FC = () => {
     };
   }, [filteredData]);
 
-  const handleDrillDown = (data: any, type: string) => {
+  const handleDrillDown = (title: string, data: any[], type: string) => {
     setDrillDownModal({
       isOpen: true,
-      data,
+      data: { title, rawData: data, type },
       type
     });
   };

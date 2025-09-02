@@ -68,31 +68,43 @@ export const SalesAnalyticsSection: React.FC<SalesAnalyticsSectionProps> = ({ da
   });
 
   const applyFilters = (rawData: SalesData[], includeHistoric: boolean = false) => {
-    let filtered = rawData;
+    console.log('Applying filters to', rawData.length, 'records. IncludeHistoric:', includeHistoric);
+    console.log('Current filters:', filters);
+    console.log('Active location:', activeLocation);
+    
+    let filtered = [...rawData];
 
+    // Apply location filter
     filtered = filtered.filter(item => {
       const locationMatch = activeLocation === 'kwality' 
         ? item.calculatedLocation === 'Kwality House, Kemps Corner' 
         : activeLocation === 'supreme' 
         ? item.calculatedLocation === 'Supreme HQ, Bandra' 
-        : item.calculatedLocation === 'Kenkere House';
+        : item.calculatedLocation?.includes('Kenkere') || item.calculatedLocation === 'Kenkere House';
       return locationMatch;
     });
 
+    console.log('After location filter:', filtered.length, 'records');
+
+    // Apply date range filter
     if (!includeHistoric && (filters.dateRange.start || filters.dateRange.end)) {
       const startDate = filters.dateRange.start ? new Date(filters.dateRange.start) : null;
       const endDate = filters.dateRange.end ? new Date(filters.dateRange.end) : null;
+      
+      console.log('Applying date filter:', startDate, 'to', endDate);
       
       filtered = filtered.filter(item => {
         if (!item.paymentDate) return false;
 
         let itemDate: Date | null = null;
 
+        // Try DD/MM/YYYY format first
         const ddmmyyyy = item.paymentDate.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
         if (ddmmyyyy) {
           const [, day, month, year] = ddmmyyyy;
           itemDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
         } else {
+          // Try other formats
           const formats = [
             new Date(item.paymentDate), 
             new Date(item.paymentDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')), 
@@ -112,25 +124,52 @@ export const SalesAnalyticsSection: React.FC<SalesAnalyticsSectionProps> = ({ da
         if (endDate && itemDate > endDate) return false;
         return true;
       });
+      
+      console.log('After date filter:', filtered.length, 'records');
     }
 
-    // Apply other filters
+    // Apply category filter
     if (filters.category?.length) {
-      filtered = filtered.filter(item => filters.category!.some(cat => item.cleanedCategory?.toLowerCase().includes(cat.toLowerCase())));
+      filtered = filtered.filter(item => 
+        filters.category!.some(cat => 
+          item.cleanedCategory?.toLowerCase().includes(cat.toLowerCase())
+        )
+      );
+      console.log('After category filter:', filtered.length, 'records');
     }
+
+    // Apply payment method filter
     if (filters.paymentMethod?.length) {
-      filtered = filtered.filter(item => filters.paymentMethod!.some(method => item.paymentMethod?.toLowerCase().includes(method.toLowerCase())));
+      filtered = filtered.filter(item => 
+        filters.paymentMethod!.some(method => 
+          item.paymentMethod?.toLowerCase().includes(method.toLowerCase())
+        )
+      );
+      console.log('After payment method filter:', filtered.length, 'records');
     }
+
+    // Apply sold by filter
     if (filters.soldBy?.length) {
-      filtered = filtered.filter(item => filters.soldBy!.some(seller => item.soldBy?.toLowerCase().includes(seller.toLowerCase())));
+      filtered = filtered.filter(item => 
+        filters.soldBy!.some(seller => 
+          item.soldBy?.toLowerCase().includes(seller.toLowerCase())
+        )
+      );
+      console.log('After sold by filter:', filtered.length, 'records');
     }
+
+    // Apply amount range filters
     if (filters.minAmount) {
       filtered = filtered.filter(item => (item.paymentValue || 0) >= filters.minAmount!);
+      console.log('After min amount filter:', filtered.length, 'records');
     }
+    
     if (filters.maxAmount) {
       filtered = filtered.filter(item => (item.paymentValue || 0) <= filters.maxAmount!);
+      console.log('After max amount filter:', filtered.length, 'records');
     }
 
+    console.log('Final filtered data:', filtered.length, 'records');
     return filtered;
   };
 
@@ -139,13 +178,31 @@ export const SalesAnalyticsSection: React.FC<SalesAnalyticsSectionProps> = ({ da
 
   const handleRowClick = (rowData: any) => {
     console.log('Row clicked with data:', rowData);
-    setDrillDownData(rowData);
+    // Enhance the drill down data with filtered raw data
+    const enhancedData = {
+      ...rowData,
+      rawData: filteredData.filter(item => {
+        if (rowData.soldBy) return item.soldBy === rowData.soldBy;
+        if (rowData.paymentMethod) return item.paymentMethod === rowData.paymentMethod;
+        if (rowData.name) return item.cleanedProduct === rowData.name || item.cleanedCategory === rowData.name;
+        return true;
+      })
+    };
+    setDrillDownData(enhancedData);
     setDrillDownType('product');
   };
 
   const handleMetricClick = (metricData: any) => {
     console.log('Metric clicked with data:', metricData);
-    setDrillDownData(metricData);
+    // Enhance metric data with raw sales data
+    const enhancedData = {
+      ...metricData,
+      rawData: filteredData,
+      grossRevenue: filteredData.reduce((sum, item) => sum + (item.paymentValue || 0), 0),
+      transactions: filteredData.length,
+      uniqueMembers: new Set(filteredData.map(item => item.memberId)).size
+    };
+    setDrillDownData(enhancedData);
     setDrillDownType('metric');
   };
 
