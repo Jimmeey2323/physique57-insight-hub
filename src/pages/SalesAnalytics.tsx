@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { SalesAnalyticsSection } from '@/components/dashboard/SalesAnalyticsSection';
 import { useGoogleSheets } from '@/hooks/useGoogleSheets';

@@ -126,12 +126,12 @@ export const useSessionsData = () => {
           totalPaid: parseNumericValue(row[15]),
           nonPaidCount: parseNumericValue(row[16]),
           uniqueId: row[17] || '',
-          checkedInsWithMemberships: parseNumericValue(row[18]),
-          checkedInsWithPackages: parseNumericValue(row[19]),
-          checkedInsWithIntroOffers: parseNumericValue(row[20]),
-          checkedInsWithSingleClasses: parseNumericValue(row[21]),
-          classType: row[22] || '',
-          cleanedClass: row[23] || '',
+          checkedInsWithMemberships: parseNumericValue(row[19]),
+          checkedInsWithPackages: parseNumericValue(row[20]),
+          checkedInsWithIntroOffers: parseNumericValue(row[21]),
+          checkedInsWithSingleClasses: parseNumericValue(row[22]),
+          classType: row[23] || '',
+          cleanedClass: row[24] || '',
           fillPercentage,
           revenue: parseNumericValue(row[15])
         };

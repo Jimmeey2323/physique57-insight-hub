@@ -2,7 +2,6 @@ export interface SalesData {
   memberId: string;
   customerName: string;
   customerEmail: string;
-  payingMemberId: string;
   saleItemId: string;
   paymentCategory: string;
   membershipType: string;
@@ -20,14 +19,18 @@ export interface SalesData {
   calculatedLocation: string;
   cleanedProduct: string;
   cleanedCategory: string;
+  
+  // Additional derived fields
+  netRevenue: number;
+  vat: number;
+  grossRevenue: number;
+  mrpPreTax?: number;
+  mrpPostTax?: number;
   discountAmount?: number;
-  grossRevenue?: number;
-  preTaxMrp?: number;
-  vat?: number;
-  netRevenue?: number;
-  postTaxMrp?: number;
-  grossDiscountPercent?: number;
-  netDiscountPercent?: number;
+  discountPercentage?: number;
+  discountType?: string;
+  isPromotional?: boolean;
+  hostId?: string;
 }
 
 export interface SessionData {
@@ -42,10 +45,12 @@ export interface SessionData {
   booked: number;
   checkedIn: number;
   checkedInCount: number;
-  sessionCount: number;
-  fillPercentage: number;
+  waitlisted: number;
   waitlist: number;
   noShows: number;
+  fillPercentage: number;
+  sessionCount: number;
+  totalAttendees: number;
 }
 
 export interface NewClientData {
@@ -181,11 +186,14 @@ export type TrainerMetricType =
   | 'retention' 
   | 'conversion' 
   | 'emptySessions' 
+  | 'nonEmptySessions'
   | 'newMembers'
   | 'cycleSessions'
   | 'barreSessions'
   | 'retainedMembers'
-  | 'convertedMembers';
+  | 'convertedMembers'
+  | 'cycleRevenue'
+  | 'barreRevenue';
 
 // Year-on-year specific metric types
 export type YearOnYearMetricType = 
@@ -226,4 +234,17 @@ export interface InteractiveChartProps {
   title: string;
   data: SalesData[] | NewClientData[] | ChartDataPoint[];
   type: 'revenue' | 'performance' | 'sessions' | 'newClients';
+}
+
+export interface DrillDownModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  data: any[];
+  type: 'product' | 'category' | 'paymentMethod' | 'metric' | 'member' | 'soldBy' | 'client-conversion' | 'trainer' | 'location';
+  columns: Array<{
+    key: string;
+    header: string;
+    render?: (value: any) => React.ReactNode;
+  }>;
 }
