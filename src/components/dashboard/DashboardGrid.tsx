@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { BarChart3, TrendingUp, Users, UserCheck, Calendar, Tag, ChevronRight, BarChart2, Target } from "lucide-react";
+import { BarChart3, TrendingUp, Users, UserCheck, Calendar, Tag, ChevronRight, BarChart2, Target, XCircle } from "lucide-react";
 
 // Utility function for className merging
 function cn(...classes: (string | undefined | null | false)[]): string {
@@ -100,6 +100,15 @@ const defaultButtons: DashboardButton[] = [{
   gradient: "from-violet-50 to-violet-100",
   hoverColor: "hover:border-violet-300",
   bgGradient: "from-violet-600 to-violet-700"
+}, {
+  id: "late-cancellations",
+  label: "Late Cancellations",
+  description: "Late Cancellation Patterns and Analysis",
+  icon: <XCircle size={28} />,
+  color: "text-red-700",
+  gradient: "from-red-50 to-red-100",
+  hoverColor: "hover:border-red-300",
+  bgGradient: "from-red-600 to-red-700"
 }];
 export function DashboardGrid({
   buttons = defaultButtons,
