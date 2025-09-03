@@ -236,12 +236,33 @@ export interface InteractiveChartProps {
   type: 'revenue' | 'performance' | 'sessions' | 'newClients';
 }
 
+export interface LateCancellationsData {
+  location: string;
+  tableType?: string;
+  cleanedClass?: string;
+  trainerName?: string;
+  cleanedProduct?: string;
+  // Monthly data columns - using a flexible approach for the date columns
+  [key: string]: string | number | undefined;
+}
+
+export interface LateCancellationsFilterOptions {
+  dateRange: {
+    start: string;
+    end: string;
+  };
+  location: string[];
+  trainer: string[];
+  classType: string[];
+  productType: string[];
+}
+
 export interface DrillDownModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
   data: any[];
-  type: 'product' | 'category' | 'paymentMethod' | 'metric' | 'member' | 'soldBy' | 'client-conversion' | 'trainer' | 'location';
+  type: 'product' | 'category' | 'paymentMethod' | 'metric' | 'member' | 'soldBy' | 'client-conversion' | 'trainer' | 'location' | 'late-cancellations';
   columns: Array<{
     key: string;
     header: string;
