@@ -21,6 +21,7 @@ import { ClientConversionCharts } from '@/components/dashboard/ClientConversionC
 import { ClientConversionMonthOnMonthTable } from '@/components/dashboard/ClientConversionMonthOnMonthTable';
 import { ClientConversionYearOnYearTable } from '@/components/dashboard/ClientConversionYearOnYearTable';
 import { ClientConversionMembershipTable } from '@/components/dashboard/ClientConversionMembershipTable';
+import { ConversionAnalyticsTables } from '@/components/dashboard/ConversionAnalyticsTables';
 import { ClientConversionEntityTable } from '@/components/dashboard/ClientConversionEntityTable';
 
 const ClientRetention = () => {
@@ -257,6 +258,7 @@ const ClientRetention = () => {
 
             <TabsContent value="analytics" className="space-y-8">
               <EnhancedClientConversionMetrics data={filteredData} />
+              <ConversionAnalyticsTables data={filteredData} onItemClick={(item) => console.log('Item clicked:', item)} />
               <ClientConversionEntityTable data={filteredData} />
             </TabsContent>
 
