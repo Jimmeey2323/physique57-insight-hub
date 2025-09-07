@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { formatCurrency, formatNumber, formatDate } from '@/utils/formatters';
 import { NewClientData } from '@/types/dashboard';
+import { ClientDrillDownModal } from './ClientDrillDownModal';
 
 interface ClientConversionDetailedDataTableProps {
   data: NewClientData[];
@@ -34,6 +35,8 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
   const [searchTerm, setSearchTerm] = useState('');
   const [sortField, setSortField] = useState('firstVisitDate');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
+  const [selectedClient, setSelectedClient] = useState<NewClientData | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredAndSortedData = useMemo(() => {
     let filtered = data.filter(client => {
@@ -150,9 +153,6 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
           <div className="font-bold text-emerald-600 text-lg">
             {formatCurrency(value || 0)}
           </div>
-          <div className="text-xs text-slate-500">
-            {value > 50000 ? 'High Value' : value > 20000 ? 'Medium' : 'Standard'}
-          </div>
         </div>
       ),
       align: 'center' as const,
@@ -207,8 +207,12 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => onItemClick?.(item)}
-          className="gap-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+          onClick={() => {
+            setSelectedClient(item);
+            setIsModalOpen(true);
+            onItemClick?.(item);
+          }}
+          className="gap-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50 transition-all duration-200 hover:scale-105"
         >
           <Eye className="w-4 h-4" />
           View
@@ -304,6 +308,12 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
           sortDirection={sortDirection}
         />
       </CardContent>
+      
+      <ClientDrillDownModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        client={selectedClient}
+      />
     </Card>
   );
 };

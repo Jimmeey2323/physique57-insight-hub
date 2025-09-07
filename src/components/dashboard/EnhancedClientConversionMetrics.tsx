@@ -13,10 +13,10 @@ export const EnhancedClientConversionMetrics: React.FC<EnhancedClientConversionM
   // Calculate comprehensive metrics
   const totalClients = data.length;
   
-  // Fix new members calculation to match table - count rows where isNew contains "New"
+  // Fix new members calculation to match table - count rows where isNew is "Yes" or contains "New"
   const newMembers = data.filter(client => {
     const isNewValue = String(client.isNew || '').toLowerCase();
-    return isNewValue.includes('new');
+    return isNewValue === 'yes' || isNewValue.includes('new');
   }).length;
   
   const convertedMembers = data.filter(client => client.conversionStatus === 'Converted').length;
