@@ -7,9 +7,26 @@ import { FolderOpen, TrendingUp, TrendingDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface CategoryData {
+  category: string;
+  metricValue: number;
+  monthlyValues: Record<string, number>;
+  rawData: SalesData[];
+  name: string;
+  grossRevenue: number;
+  netRevenue: number;
+  totalValue: number;
+  totalCurrent: number;
+  totalTransactions: number;
+  totalCustomers: number;
+  uniqueMembers: number;
+  transactions: number;
+  months: Record<string, { current: number; change: number }>;
+}
+
 interface CategoryPerformanceTableProps {
   data: SalesData[];
-  onRowClick: (row: any) => void;
+  onRowClick: (row: CategoryData) => void;
   selectedMetric?: YearOnYearMetricType;
 }
 
@@ -177,7 +194,7 @@ export const CategoryPerformanceTable: React.FC<CategoryPerformanceTableProps> =
             change: 0
           };
           return acc;
-        }, {} as Record<string, any>)
+        }, {} as Record<string, { current: number; change: number }>)
       };
     });
     console.log('Processed category data:', categoryData.length, 'categories');

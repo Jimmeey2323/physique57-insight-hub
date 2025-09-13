@@ -203,7 +203,7 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
     {
       key: 'actions',
       header: 'Actions',
-      render: (value: any, item: NewClientData) => (
+      render: (value: unknown, item: NewClientData) => (
         <Button
           variant="ghost"
           size="sm"

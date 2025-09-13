@@ -160,7 +160,7 @@ export interface MetricCardData {
   calculation: string;
   icon: string;
   rawValue?: number;
-  breakdown?: Record<string, any>;
+  breakdown?: Record<string, string | number | boolean>;
 }
 
 export interface ChartDataPoint {
@@ -170,7 +170,7 @@ export interface ChartDataPoint {
 }
 
 // Generic table data type for flexible table structures
-export type TableData = Record<string, any>;
+export type TableData = Record<string, string | number | boolean | null | undefined>;
 
 // Sales-specific metric types
 export type MetricType = 'revenue' | 'transactions' | 'members' | 'atv' | 'auv' | 'asv' | 'upt';
@@ -214,7 +214,7 @@ export interface DataTableProps {
   data: SalesData[];
   type: 'monthly' | 'product' | 'category';
   filters: FilterOptions;
-  onRowClick: (row: any) => void;
+  onRowClick: (row: SalesData) => void;
   collapsedGroups?: Set<string>;
   onGroupToggle?: (groupKey: string) => void;
 }
@@ -223,7 +223,7 @@ export interface DataTableProps {
 export interface EnhancedYearOnYearTableProps {
   data: SalesData[];
   filters?: FilterOptions;
-  onRowClick: (row: any) => void;
+  onRowClick: (row: SalesData) => void;
   collapsedGroups?: Set<string>;
   onGroupToggle?: (groupKey: string) => void;
   selectedMetric?: YearOnYearMetricType;
@@ -261,11 +261,11 @@ export interface DrillDownModalProps {
   isOpen: boolean;
   onClose: () => void;
   title: string;
-  data: any[];
+  data: TableData[];
   type: 'product' | 'category' | 'paymentMethod' | 'metric' | 'member' | 'soldBy' | 'client-conversion' | 'trainer' | 'location' | 'late-cancellations';
   columns: Array<{
     key: string;
     header: string;
-    render?: (value: any) => React.ReactNode;
+    render?: (value: string | number | boolean | null | undefined) => React.ReactNode;
   }>;
 }

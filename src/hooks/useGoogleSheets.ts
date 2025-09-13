@@ -81,34 +81,34 @@ export const useGoogleSheets = () => {
       console.log('Sheet headers:', headers);
       
       // Transform the raw data to match SalesData interface
-      const salesData: SalesData[] = rows.slice(1).map((row: any[]) => {
-        const rawItem: any = {};
+      const salesData: SalesData[] = rows.slice(1).map((row: (string | number)[]) => {
+        const rawItem: Record<string, string | number> = {};
         headers.forEach((header: string, index: number) => {
           rawItem[header] = row[index] || '';
         });
 
         // Transform to match SalesData interface with camelCase field names
         const transformedItem: SalesData = {
-          memberId: rawItem['Member ID'] || rawItem['memberId'] || '',
-          customerName: rawItem['Customer Name'] || rawItem['customerName'] || '',
-          customerEmail: rawItem['Customer Email'] || rawItem['customerEmail'] || '',
-          saleItemId: rawItem['Sale Item ID'] || rawItem['saleItemId'] || '',
-          paymentCategory: rawItem['Payment Category'] || rawItem['paymentCategory'] || '',
-          membershipType: rawItem['Membership Type'] || rawItem['membershipType'] || '',
-          paymentDate: rawItem['Payment Date'] || rawItem['paymentDate'] || '',
+          memberId: String(rawItem['Member ID'] || rawItem['memberId'] || ''),
+          customerName: String(rawItem['Customer Name'] || rawItem['customerName'] || ''),
+          customerEmail: String(rawItem['Customer Email'] || rawItem['customerEmail'] || ''),
+          saleItemId: String(rawItem['Sale Item ID'] || rawItem['saleItemId'] || ''),
+          paymentCategory: String(rawItem['Payment Category'] || rawItem['paymentCategory'] || ''),
+          membershipType: String(rawItem['Membership Type'] || rawItem['membershipType'] || ''),
+          paymentDate: String(rawItem['Payment Date'] || rawItem['paymentDate'] || ''),
           paymentValue: parseNumericValue(rawItem['Payment Value'] || rawItem['paymentValue'] || 0),
           paidInMoneyCredits: parseNumericValue(rawItem['Paid in Money Credits'] || rawItem['Paid In Money Credits'] || rawItem['paidInMoneyCredits'] || 0),
           paymentVAT: parseNumericValue(rawItem['Payment VAT'] || rawItem['paymentVAT'] || 0),
-          paymentItem: rawItem['Payment Item'] || rawItem['paymentItem'] || '',
-          paymentStatus: rawItem['Payment Status'] || rawItem['paymentStatus'] || '',
-          paymentMethod: rawItem['Payment Method'] || rawItem['paymentMethod'] || '',
-          paymentTransactionId: rawItem['Payment Transaction ID'] || rawItem['paymentTransactionId'] || '',
-          stripeToken: rawItem['Stripe Token'] || rawItem['stripeToken'] || '',
-          soldBy: rawItem['Sold By'] || rawItem['soldBy'] || '',
-          saleReference: rawItem['Sale Reference'] || rawItem['saleReference'] || '',
-          calculatedLocation: rawItem['Calculated Location'] || rawItem['calculatedLocation'] || '',
-          cleanedProduct: rawItem['Cleaned Product'] || rawItem['cleanedProduct'] || '',
-          cleanedCategory: rawItem['Cleaned Category'] || rawItem['cleanedCategory'] || '',
+          paymentItem: String(rawItem['Payment Item'] || rawItem['paymentItem'] || ''),
+          paymentStatus: String(rawItem['Payment Status'] || rawItem['paymentStatus'] || ''),
+          paymentMethod: String(rawItem['Payment Method'] || rawItem['paymentMethod'] || ''),
+          paymentTransactionId: String(rawItem['Payment Transaction ID'] || rawItem['paymentTransactionId'] || ''),
+          stripeToken: String(rawItem['Stripe Token'] || rawItem['stripeToken'] || ''),
+          soldBy: String(rawItem['Sold By'] || rawItem['soldBy'] || ''),
+          saleReference: String(rawItem['Sale Reference'] || rawItem['saleReference'] || ''),
+          calculatedLocation: String(rawItem['Calculated Location'] || rawItem['calculatedLocation'] || ''),
+          cleanedProduct: String(rawItem['Cleaned Product'] || rawItem['cleanedProduct'] || ''),
+          cleanedCategory: String(rawItem['Cleaned Category'] || rawItem['cleanedCategory'] || ''),
           
           // Calculate derived fields
           netRevenue: parseNumericValue(rawItem['Payment Value'] || rawItem['paymentValue'] || 0) - parseNumericValue(rawItem['Payment VAT'] || rawItem['paymentVAT'] || 0),
@@ -134,7 +134,7 @@ export const useGoogleSheets = () => {
             rawItem['discount_percentage'] || rawItem['discountPercentage'] || rawItem['DiscountPercentage'] ||
             rawItem['Discount_Percentage'] || rawItem['Discount %'] || rawItem['Discount_Percent'] || 0
           ),
-          hostId: rawItem['Host Id'] || rawItem['Host ID'] || rawItem['hostId'] || ''
+          hostId: String(rawItem['Host Id'] || rawItem['Host ID'] || rawItem['hostId'] || '')
         };
 
         return transformedItem;
