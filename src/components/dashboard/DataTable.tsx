@@ -132,7 +132,7 @@ export const DataTable: React.FC<DataTableProps> = ({
   };
   const processedData = useMemo(() => {
     if (type === 'monthly') {
-      let filteredData = filterDataByDateAndFilters(data);
+      const filteredData = filterDataByDateAndFilters(data);
 
       // Get all unique products
       const products = [...new Set(filteredData.map(item => item.cleanedProduct))].filter(Boolean);
@@ -238,7 +238,7 @@ export const DataTable: React.FC<DataTableProps> = ({
     }
 
     // For product and category tables
-    let filteredData = filterDataByDateAndFilters(data);
+    const filteredData = filterDataByDateAndFilters(data);
     const groupingField = type === 'product' ? 'cleanedProduct' : 'cleanedCategory';
     const grouped = filteredData.reduce((acc, item) => {
       const key = item[groupingField] || 'Unknown';

@@ -120,7 +120,7 @@ export const LateCancellationsSection: React.FC<LateCancellationsSectionProps> =
     if (locationData.length === 0) return null;
 
     let totalCancellations = 0;
-    let totalLocations = locationData.length;
+    const totalLocations = locationData.length;
 
     locationData.forEach(item => {
       monthColumns.forEach(month => {
