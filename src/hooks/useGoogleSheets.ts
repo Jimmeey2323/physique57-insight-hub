@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { SalesData } from '@/types/dashboard';
 
 const GOOGLE_CONFIG = {
@@ -48,7 +48,7 @@ export const useGoogleSheets = () => {
     return isNaN(parsed) ? 0 : parsed;
   };
 
-  const fetchSalesData = async () => {
+  const fetchSalesData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null); // Clear previous errors
@@ -193,11 +193,11 @@ export const useGoogleSheets = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchSalesData();
-  }, []);
+  }, [fetchSalesData]);
 
   return { data, loading, error, refetch: fetchSalesData };
 };

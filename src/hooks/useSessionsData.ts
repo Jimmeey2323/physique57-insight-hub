@@ -102,7 +102,7 @@ export const useSessionsData = () => {
         return;
       }
 
-      const sessionsData: SessionData[] = rows.slice(1).map((row: any[]) => {
+      const sessionsData: SessionData[] = rows.slice(1).map((row: (string | number)[]) => {
         const capacity = parseNumericValue(row[6]);
         const checkedInCount = parseNumericValue(row[7]);
         const fillPercentage = capacity > 0 ? (checkedInCount / capacity) * 100 : 0;

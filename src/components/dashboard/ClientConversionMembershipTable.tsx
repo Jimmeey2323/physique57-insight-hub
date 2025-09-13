@@ -7,6 +7,21 @@ import { formatCurrency, formatNumber } from '@/utils/formatters';
 import { NewClientData } from '@/types/dashboard';
 import { ModernDataTable } from '@/components/ui/ModernDataTable';
 
+interface MembershipStats {
+  membershipType: string;
+  totalMembers: number;
+  converted: number;
+  retained: number;
+  totalLTV: number;
+  totalVisits: number;
+  conversionSpans: number[];
+  conversionRate: number;
+  retentionRate: number;
+  avgLTV: number;
+  avgVisits: number;
+  avgConversionSpan: number;
+}
+
 interface ClientConversionMembershipTableProps {
   data: NewClientData[];
 }
@@ -23,7 +38,12 @@ export const ClientConversionMembershipTable: React.FC<ClientConversionMembershi
           retained: 0,
           totalLTV: 0,
           totalVisits: 0,
-          conversionSpans: []
+          conversionSpans: [],
+          conversionRate: 0,
+          retentionRate: 0,
+          avgLTV: 0,
+          avgVisits: 0,
+          avgConversionSpan: 0
         };
       }
       
@@ -37,10 +57,10 @@ export const ClientConversionMembershipTable: React.FC<ClientConversionMembershi
       }
       
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, MembershipStats>);
 
     return Object.values(membershipStats)
-      .map((stat: any) => ({
+      .map((stat: MembershipStats) => ({
         ...stat,
         conversionRate: stat.totalMembers > 0 ? (stat.converted / stat.totalMembers) * 100 : 0,
         retentionRate: stat.totalMembers > 0 ? (stat.retained / stat.totalMembers) * 100 : 0,
@@ -50,8 +70,8 @@ export const ClientConversionMembershipTable: React.FC<ClientConversionMembershi
           ? stat.conversionSpans.reduce((a: number, b: number) => a + b, 0) / stat.conversionSpans.length 
           : 0
       }))
-      .filter((stat: any) => stat.totalMembers > 0)
-      .sort((a: any, b: any) => b.totalMembers - a.totalMembers);
+      .filter((stat: MembershipStats) => stat.totalMembers > 0)
+      .sort((a: MembershipStats, b: MembershipStats) => b.totalMembers - a.totalMembers);
   }, [data]);
 
   const columns = [

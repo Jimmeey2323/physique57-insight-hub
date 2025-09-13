@@ -60,17 +60,17 @@ const parseDate = (dateString: string | undefined | null) => {
   }
 };
 
-const safeGet = (row: any[], index: number): string => {
+const safeGet = (row: (string | number)[], index: number): string => {
   return row && row[index] !== undefined && row[index] !== null ? String(row[index]).trim() : '';
 };
 
-const safeGetNumber = (row: any[], index: number): number => {
+const safeGetNumber = (row: (string | number)[], index: number): number => {
   const value = safeGet(row, index);
   const parsed = parseFloat(value);
   return isNaN(parsed) ? 0 : parsed;
 };
 
-const safeGetInt = (row: any[], index: number): number => {
+const safeGetInt = (row: (string | number)[], index: number): number => {
   const value = safeGet(row, index);
   const parsed = parseInt(value);
   return isNaN(parsed) ? 0 : parsed;
@@ -146,7 +146,7 @@ export const useLeadsData = () => {
 
       // Process each row with defensive programming
       const leadsData: LeadsData[] = rows.slice(1)
-        .map((row: any[], index: number) => {
+        .map((row: (string | number)[], index: number) => {
           try {
             if (!row || row.length === 0) {
               console.warn(`Empty row at index ${index + 1}`);
