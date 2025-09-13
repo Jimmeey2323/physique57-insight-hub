@@ -7,6 +7,14 @@ import { TrendingUp, PieChart as PieChartIcon, BarChart3, Activity } from 'lucid
 import { formatCurrency, formatNumber } from '@/utils/formatters';
 import { NewClientData } from '@/types/dashboard';
 
+interface MonthlyData {
+  month: string;
+  sortKey: string;
+  total: number;
+  converted: number;
+  conversionRate?: number;
+}
+
 interface ClientConversionChartsProps {
   data: NewClientData[];
 }
@@ -102,12 +110,12 @@ export const ClientConversionCharts: React.FC<ClientConversionChartsProps> = ({ 
       }
       
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, MonthlyData>);
 
     const monthlyTrend = Object.values(monthlyData)
-      .sort((a: any, b: any) => a.sortKey.localeCompare(b.sortKey))
+      .sort((a: MonthlyData, b: MonthlyData) => a.sortKey.localeCompare(b.sortKey))
       .slice(-12)
-      .map((item: any) => ({
+      .map((item: MonthlyData) => ({
         ...item,
         conversionRate: item.total > 0 ? ((item.converted / item.total) * 100) : 0
       }));
@@ -122,13 +130,17 @@ export const ClientConversionCharts: React.FC<ClientConversionChartsProps> = ({ 
 
   const COLORS = ['#3B82F6', '#EF4444', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899'];
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: {
+    active?: boolean;
+    payload?: Array<{ payload: any; color: string; dataKey: string; value: any }>;
+    label?: string;
+  }) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
           <p className="font-semibold">{label || data.name}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry: { payload: any; color: string; dataKey: string; value: any }, index: number) => (
             <p key={index} style={{ color: entry.color }}>
               {entry.dataKey}: {typeof entry.value === 'number' ? (
                 entry.dataKey.includes('Rate') || entry.dataKey.includes('percentage') 

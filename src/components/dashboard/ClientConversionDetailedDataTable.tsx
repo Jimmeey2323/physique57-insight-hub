@@ -36,7 +36,7 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
   const filteredAndSortedData = useMemo(() => {
-    let filtered = data.filter(client => {
+    const filtered = data.filter(client => {
       if (!searchTerm) return true;
       const searchLower = searchTerm.toLowerCase();
       const fullName = `${client.firstName} ${client.lastName}`.toLowerCase();
@@ -203,7 +203,7 @@ export const ClientConversionDetailedDataTable: React.FC<ClientConversionDetaile
     {
       key: 'actions',
       header: 'Actions',
-      render: (value: any, item: NewClientData) => (
+      render: (value: unknown, item: NewClientData) => (
         <Button
           variant="ghost"
           size="sm"

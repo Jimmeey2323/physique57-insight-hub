@@ -7,9 +7,26 @@ import { FolderOpen, TrendingUp, TrendingDown } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+interface CategoryData {
+  category: string;
+  metricValue: number;
+  monthlyValues: Record<string, number>;
+  rawData: SalesData[];
+  name: string;
+  grossRevenue: number;
+  netRevenue: number;
+  totalValue: number;
+  totalCurrent: number;
+  totalTransactions: number;
+  totalCustomers: number;
+  uniqueMembers: number;
+  transactions: number;
+  months: Record<string, { current: number; change: number }>;
+}
+
 interface CategoryPerformanceTableProps {
   data: SalesData[];
-  onRowClick: (row: any) => void;
+  onRowClick: (row: CategoryData) => void;
   selectedMetric?: YearOnYearMetricType;
 }
 
@@ -73,21 +90,25 @@ export const CategoryPerformanceTable: React.FC<CategoryPerformanceTableProps> =
         return new Set(items.map(item => item.memberId)).size;
       case 'units':
         return items.length;
-      case 'atv':
+      case 'atv': {
         const totalRevenue = items.reduce((sum, item) => sum + (item.paymentValue || 0), 0);
         return items.length > 0 ? totalRevenue / items.length : 0;
-      case 'auv':
+      }
+      case 'auv': {
         const revenue = items.reduce((sum, item) => sum + (item.paymentValue || 0), 0);
         const units = items.length;
         return units > 0 ? revenue / units : 0;
-      case 'asv':
+      }
+      case 'asv': {
         const totalRev = items.reduce((sum, item) => sum + (item.paymentValue || 0), 0);
         const uniqueMembers = new Set(items.map(item => item.memberId)).size;
         return uniqueMembers > 0 ? totalRev / uniqueMembers : 0;
-      case 'upt':
+      }
+      case 'upt': {
         const totalTransactions = items.length;
         const totalUnits = items.length;
         return totalTransactions > 0 ? totalUnits / totalTransactions : 0;
+      }
       case 'vat':
         return items.reduce((sum, item) => sum + (item.paymentVAT || 0), 0);
       case 'netRevenue':
@@ -173,7 +194,7 @@ export const CategoryPerformanceTable: React.FC<CategoryPerformanceTableProps> =
             change: 0
           };
           return acc;
-        }, {} as Record<string, any>)
+        }, {} as Record<string, { current: number; change: number }>)
       };
     });
     console.log('Processed category data:', categoryData.length, 'categories');

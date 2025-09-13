@@ -10,7 +10,7 @@ import { NewClientData } from '@/types/dashboard';
 
 interface ClientConversionDataTableProps {
   data: NewClientData[];
-  onItemClick?: (item: any) => void;
+  onItemClick?: (item: NewClientData) => void;
 }
 
 export const ClientConversionDataTable: React.FC<ClientConversionDataTableProps> = ({

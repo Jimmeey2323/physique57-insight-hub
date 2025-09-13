@@ -7,6 +7,21 @@ import { formatCurrency, formatNumber } from '@/utils/formatters';
 import { NewClientData } from '@/types/dashboard';
 import { ModernDataTable } from '@/components/ui/ModernDataTable';
 
+interface EntityStats {
+  entityName: string;
+  totalMembers: number;
+  converted: number;
+  retained: number;
+  totalLTV: number;
+  totalVisits: number;
+  totalClasses: number;
+  conversionRate: number;
+  retentionRate: number;
+  avgLTV: number;
+  avgVisits: number;
+  avgClasses: number;
+}
+
 interface ClientConversionEntityTableProps {
   data: NewClientData[];
 }
@@ -23,7 +38,12 @@ export const ClientConversionEntityTable: React.FC<ClientConversionEntityTablePr
           retained: 0,
           totalLTV: 0,
           totalVisits: 0,
-          totalClasses: 0
+          totalClasses: 0,
+          conversionRate: 0,
+          retentionRate: 0,
+          avgLTV: 0,
+          avgVisits: 0,
+          avgClasses: 0
         };
       }
       
@@ -35,10 +55,10 @@ export const ClientConversionEntityTable: React.FC<ClientConversionEntityTablePr
       acc[entity].totalClasses += client.classNo || 0;
       
       return acc;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, EntityStats>);
 
     return Object.values(entityStats)
-      .map((stat: any) => ({
+      .map((stat: EntityStats) => ({
         ...stat,
         conversionRate: stat.totalMembers > 0 ? (stat.converted / stat.totalMembers) * 100 : 0,
         retentionRate: stat.totalMembers > 0 ? (stat.retained / stat.totalMembers) * 100 : 0,
@@ -46,8 +66,8 @@ export const ClientConversionEntityTable: React.FC<ClientConversionEntityTablePr
         avgVisits: stat.totalMembers > 0 ? stat.totalVisits / stat.totalMembers : 0,
         avgClasses: stat.totalMembers > 0 ? stat.totalClasses / stat.totalMembers : 0
       }))
-      .filter((stat: any) => stat.totalMembers > 0)
-      .sort((a: any, b: any) => b.totalMembers - a.totalMembers);
+      .filter((stat: EntityStats) => stat.totalMembers > 0)
+      .sort((a: EntityStats, b: EntityStats) => b.totalMembers - a.totalMembers);
   }, [data]);
 
   const columns = [
